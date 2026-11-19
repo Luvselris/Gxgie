@@ -57,28 +57,27 @@
       position: fixed;
       top: 14px;
       right: 14px;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
+      padding: 0 12px;
+      height: 36px;
+      border-radius: 18px;
       background: rgba(255, 255, 255, 0.95);
       border: 1.5px solid var(--blue-border);
       color: var(--blue-deep);
-      font-size: 17px;
+      font-size: 12.5px;
+      font-weight: 700;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       box-shadow: 0 4px 14px rgba(30, 64, 175, 0.15);
       z-index: 999;
-      transition: transform 0.15s;
+      transition: transform 0.15s, background 0.2s, color 0.2s;
     }
-    .music-floating-btn:active { transform: scale(0.92); }
-    .music-playing {
-      animation: spinSlow 6s linear infinite;
-      border-color: var(--blue-main);
-    }
-    @keyframes spinSlow {
-      100% { transform: rotate(360deg); }
+    .music-floating-btn:active { transform: scale(0.94); }
+    .music-floating-btn.music-playing {
+      background: linear-gradient(135deg, var(--blue-main), var(--blue-deep));
+      color: #ffffff;
+      border-color: transparent;
     }
 
     .glass-card {
@@ -151,9 +150,6 @@
       font-weight: 700;
       color: var(--blue-deep);
       margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-      gap: 5px;
     }
     .highlights-scroll {
       display: flex;
@@ -301,9 +297,6 @@
       font-weight: 700;
       color: var(--blue-deep);
       margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
     }
     .review-item-card {
       background: #ffffff;
@@ -352,7 +345,7 @@
       word-break: break-word;
     }
 
-    /* Story / Highlight Viewer Modal (แสดงภาพคมชัด 100% ต้นฉบับ) */
+    /* Story / Highlight Viewer Modal */
     .story-modal {
       position: fixed;
       inset: 0;
@@ -410,11 +403,11 @@
       width: 34px;
       height: 34px;
       border-radius: 50%;
-      font-size: 18px;
+      font-size: 16px;
+      font-weight: 700;
       cursor: pointer;
     }
 
-    /* พื้นที่รูปไฮไลท์ต้นฉบับ ไม่บีบอัด ไม่ครอปสัดส่วน */
     .story-media-stage {
       flex: 1;
       display: flex;
@@ -461,7 +454,7 @@
   <!-- เพลงพื้นหลัง -->
   <audio id="bgMusic" loop preload="auto" src="https://file.garden/asG8Gt-rqWIpi3II/Cocktail%20%E0%B8%87%E0%B8%B2%E0%B8%99%E0%B9%80%E0%B8%95%E0%B9%89%E0%B8%99%E0%B8%A3%E0%B8%B3%E0%B9%83%E0%B8%99%E0%B8%84%E0%B8%B7%E0%B8%99%E0%B8%9E%E0%B8%A3%E0%B8%B0%E0%B8%88%E0%B8%B1%E0%B8%99%E0%B8%97%E0%B8%A3%E0%B9%8C%E0%B9%80%E0%B8%95%E0%B9%87%E0%B8%A1%E0%B8%94%E0%B8%A7%E0%B8%87.mp3"></audio>
 
-  <button type="button" class="music-floating-btn" id="musicBtn" onclick="toggleMusic()" title="เปิด/ปิดเพลง">🎵</button>
+  <button type="button" class="music-floating-btn" id="musicBtn" onclick="toggleMusic()">music ♡</button>
 
   <div class="container">
 
@@ -473,14 +466,14 @@
       <div class="profile-wrap">
         <img id="profileImg" src="https://file.garden/asG8Gt-rqWIpi3II/IMG_7602.png" alt="Profile">
       </div>
-      <h1 class="shop-name-title" id="shopNameText">Gxgie</h1>
+      <h1 class="shop-name-title" id="shopNameText">Gxgie ♡</h1>
       <div class="shop-bio-box" id="shopBioText">Credit, plus one here 
 thanks for your support 
 line : @632wdjwj</div>
 
       <!-- แถบ Highlights -->
       <div class="highlights-section" id="highlightsWrapper" style="display:none;">
-        <div class="highlights-label">📌 Highlights</div>
+        <div class="highlights-label">Highlights ♡</div>
         <div class="highlights-scroll" id="highlightsContainer"></div>
       </div>
     </div>
@@ -489,18 +482,18 @@ line : @632wdjwj</div>
     <div class="stats-grid">
       <div class="stat-card">
         <div class="stat-number" id="totalReviewsCount">0</div>
-        <div class="stat-label">Total Reviews 💙</div>
+        <div class="stat-label">Total Reviews ♡</div>
       </div>
       <div class="stat-card">
         <div class="stat-number" id="avgRatingValue">5.0</div>
-        <div class="stat-label">Rating ⭐</div>
+        <div class="stat-label">Rating ♡</div>
       </div>
     </div>
 
     <!-- 3. กล่องส่งรีวิว -->
     <div class="glass-card">
-      <div class="review-form-title" id="reviewFormTitle">review Gxgie 💙</div>
-      <input type="text" id="revNameInput" class="input-field" placeholder="ชื่อของคุณ 💙" maxlength="40">
+      <div class="review-form-title" id="reviewFormTitle">review Gxgie ♡</div>
+      <input type="text" id="revNameInput" class="input-field" placeholder="ชื่อของคุณ ♡" maxlength="40">
       
       <div class="star-selector" id="starSelector">
         <span class="star-btn active" data-val="1" onclick="selectStar(1)">★</span>
@@ -510,15 +503,15 @@ line : @632wdjwj</div>
         <span class="star-btn active" data-val="5" onclick="selectStar(5)">★</span>
       </div>
 
-      <textarea id="revTextInput" class="textarea-field" placeholder="review daileynakaa 💙" maxlength="400"></textarea>
-      <button type="button" class="btn-submit-review" id="btnSubmitReview" onclick="submitReview()">sent review 💙</button>
+      <textarea id="revTextInput" class="textarea-field" placeholder="review daileynakaa ♡" maxlength="400"></textarea>
+      <button type="button" class="btn-submit-review" id="btnSubmitReview" onclick="submitReview()">sent review ♡</button>
     </div>
 
     <!-- 4. กล่องแสดงรีวิวทั้งหมด -->
     <div class="glass-card">
-      <div class="reviews-header">💬 💙 รีวิวทั้งหมด</div>
+      <div class="reviews-header">รีวิวทั้งหมด ♡</div>
       <div id="reviewsListContainer">
-        <p style="text-align:center; color:var(--text-muted); font-size:13px; padding:16px;">กำลังโหลดรีวิว...</p>
+        <p style="text-align:center; color:var(--text-muted); font-size:13px; padding:16px;">กำลังโหลดรีวิว ♡</p>
       </div>
     </div>
 
@@ -533,7 +526,7 @@ line : @632wdjwj</div>
           <img id="storyCoverThumb" src="" alt="">
           <span id="storyTitleText" style="font-weight:700; font-size:14px;"></span>
         </div>
-        <button type="button" class="story-close-btn" onclick="closeStoryModal()">✕</button>
+        <button type="button" class="story-close-btn" onclick="closeStoryModal()">x</button>
       </div>
     </div>
 
@@ -560,45 +553,50 @@ line : @632wdjwj</div>
     if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    // คอลเลกชันเฉพาะของร้าน Gxgie
     const DB_SITE = "gxgie_site";
     const DB_REVIEWS = "gxgie_reviews";
     const DB_HIGHLIGHTS = "gxgie_highlights";
 
     let selectedRating = 5;
-    let highlightsMap = {}; // เก็บข้อมูลไฮไลท์และรูปภาพไม่จำกัด
+    let highlightsMap = {};
     let activeStoryId = null;
     let activeStoryIndex = 0;
 
-    // ควบคุมเพลงพื้นหลัง
     const music = document.getElementById('bgMusic');
     const musicBtn = document.getElementById('musicBtn');
 
     function toggleMusic() {
       if (music.paused) {
-        music.play().then(() => musicBtn.classList.add('music-playing')).catch(() => {});
+        music.play().then(() => {
+          musicBtn.classList.add('music-playing');
+          musicBtn.textContent = 'playing ♡';
+        }).catch(() => {});
       } else {
         music.pause();
         musicBtn.classList.remove('music-playing');
+        musicBtn.textContent = 'music ♡';
       }
     }
 
     ['touchstart', 'click'].forEach(evt => {
       document.addEventListener(evt, () => {
         if (music.paused) {
-          music.play().then(() => musicBtn.classList.add('music-playing')).catch(() => {});
+          music.play().then(() => {
+            musicBtn.classList.add('music-playing');
+            musicBtn.textContent = 'playing ♡';
+          }).catch(() => {});
         }
       }, { once: true });
     });
 
-    // ดึงการตั้งค่าหน้าร้านแบบ Real-time
     db.collection(DB_SITE).doc("config").onSnapshot(doc => {
       if (doc.exists) {
         const d = doc.data();
         if (d.shopName) {
-          document.getElementById('shopNameText').textContent = d.shopName;
+          document.getElementById('shopNameText').textContent = d.shopName.includes('♡') ? d.shopName : d.shopName + ' ♡';
           document.getElementById('pageTitle').textContent = d.shopName + " ♡";
-          document.getElementById('reviewFormTitle').textContent = `review ${d.shopName} 💙`;
+          const cleanName = d.shopName.replace(/♡/g, '').trim();
+          document.getElementById('reviewFormTitle').textContent = `review ${cleanName} ♡`;
         }
         if (d.shopBio !== undefined) document.getElementById('shopBioText').textContent = d.shopBio;
         if (d.bannerImg) document.getElementById('bannerImg').src = d.bannerImg;
@@ -607,7 +605,6 @@ line : @632wdjwj</div>
       }
     });
 
-    // ดึงข้อมูล Highlights (รองรับรูปไม่จำกัดผ่าน subcollection 'images')
     db.collection(DB_HIGHLIGHTS).orderBy("order", "asc").onSnapshot(async snap => {
       const wrapper = document.getElementById('highlightsWrapper');
       const container = document.getElementById('highlightsContainer');
@@ -627,14 +624,12 @@ line : @632wdjwj</div>
         const hlData = doc.data();
         const hlId = doc.id;
 
-        // ดึงรูปทั้งหมดของไฮไลท์นี้จาก subcollection 'images' (ใส่ได้ไม่จำกัดจำนวน)
         const imgSnap = await db.collection(DB_HIGHLIGHTS).doc(hlId).collection("images").orderBy("createdAt", "asc").get();
         const imgUrls = [];
         imgSnap.forEach(imgDoc => {
           if (imgDoc.data().url) imgUrls.push(imgDoc.data().url);
         });
 
-        // หากมีรูปสำรองใน array เก่าให้นำมารวมด้วย
         if (Array.isArray(hlData.legacyImages)) {
           hlData.legacyImages.forEach(u => { if (u && !imgUrls.includes(u)) imgUrls.push(u); });
         }
@@ -662,7 +657,7 @@ line : @632wdjwj</div>
     function openStoryModal(hlId) {
       const hl = highlightsMap[hlId];
       if (!hl || hl.images.length === 0) {
-        alert('ไฮไลท์นี้ยังไม่มีรูปภาพด้านในค่ะ 💙');
+        alert('ไฮไลท์นี้ยังไม่มีรูปภาพด้านในค่ะ ♡');
         return;
       }
       activeStoryId = hlId;
@@ -684,7 +679,6 @@ line : @632wdjwj</div>
       const total = hl.images.length;
       const url = hl.images[activeStoryIndex];
 
-      // แสดงผลรูปต้นฉบับความละเอียดเต็มโดยไม่มีการบีบอัด
       document.getElementById('storyFullImg').src = url;
       document.getElementById('storyCounterText').textContent = `${activeStoryIndex + 1} / ${total}`;
 
@@ -715,7 +709,6 @@ line : @632wdjwj</div>
       }
     }
 
-    // ระบบเลือกดาว
     function selectStar(val) {
       selectedRating = val;
       document.querySelectorAll('#starSelector .star-btn').forEach(btn => {
@@ -724,7 +717,6 @@ line : @632wdjwj</div>
       });
     }
 
-    // แปลงวันที่แบบย่อตามแบบตัวอย่าง (เช่น "18 พ.ย", "17 ก.ย")
     function formatShortThaiDate(dateObj) {
       if (!dateObj) return '';
       const shortMonths = ["ม.ค", "ก.พ", "มี.ค", "เม.ย", "พ.ค", "มิ.ย", "ก.ค", "ส.ค", "ก.ย", "ต.ค", "พ.ย", "ธ.ค"];
@@ -733,19 +725,18 @@ line : @632wdjwj</div>
       return `${d} ${m}`;
     }
 
-    // ส่งรีวิว
     async function submitReview() {
       const nameInput = document.getElementById('revNameInput');
       const textInput = document.getElementById('revTextInput');
       const name = nameInput.value.trim();
       const text = textInput.value.trim();
 
-      if (!name) return alert('กรุณากรอกชื่อของคุณก่อนส่งรีวิวนะคะ 💙');
-      if (!text) return alert('กรุณาพิมพ์ข้อความรีวิวก่อนกดส่งนะคะ 💙');
+      if (!name) return alert('กรุณากรอกชื่อของคุณก่อนส่งรีวิวนะคะ ♡');
+      if (!text) return alert('กรุณาพิมพ์ข้อความรีวิวก่อนกดส่งนะคะ ♡');
 
       const btn = document.getElementById('btnSubmitReview');
       btn.disabled = true;
-      btn.textContent = 'กำลังส่งรีวิว... 💙';
+      btn.textContent = 'กำลังส่งรีวิว ♡';
 
       const now = new Date();
       const shortDateStr = formatShortThaiDate(now);
@@ -762,16 +753,15 @@ line : @632wdjwj</div>
         nameInput.value = '';
         textInput.value = '';
         selectStar(5);
-        alert('ขอบคุณสำหรับรีวิวน่ารักๆ นะคะ 💙');
+        alert('ขอบคุณสำหรับรีวิวน่ารักๆ นะคะ ♡');
       } catch (err) {
         alert('เกิดข้อผิดพลาดในการส่งรีวิว: ' + err.message);
       } finally {
         btn.disabled = false;
-        btn.textContent = 'sent review 💙';
+        btn.textContent = 'sent review ♡';
       }
     }
 
-    // โหลดรายการรีวิวทั้งหมด + คำนวณสถิติแบบ Real-time
     db.collection(DB_REVIEWS).orderBy("createdAt", "desc").onSnapshot(snap => {
       const listBox = document.getElementById('reviewsListContainer');
       const totalEl = document.getElementById('totalReviewsCount');
@@ -780,7 +770,7 @@ line : @632wdjwj</div>
       if (snap.empty) {
         totalEl.textContent = '0';
         avgEl.textContent = '5.0';
-        listBox.innerHTML = '<p style="text-align:center; color:var(--text-muted); font-size:13px; padding:16px;">ยังไม่มีรีวิว มาเป็นคนแรกที่รีวิวให้ร้านกันนะคะ 💙</p>';
+        listBox.innerHTML = '<p style="text-align:center; color:var(--text-muted); font-size:13px; padding:16px;">ยังไม่มีรีวิว มาเป็นคนแรกที่รีวิวให้ร้านกันนะคะ ♡</p>';
         return;
       }
 
