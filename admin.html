@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Admin Dashboard 💙 Gxgie</title>
+  <title>Admin Dashboard ♡ Gxgie</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -144,7 +144,6 @@
       cursor: pointer;
     }
 
-    /* การ์ดจัดการ Highlight */
     .hl-admin-card {
       background: #f8fafc;
       border: 1.5px solid var(--blue-border);
@@ -196,7 +195,6 @@
       justify-content: center;
     }
 
-    /* การ์ดจัดการรีวิว */
     .rev-admin-item {
       background: #ffffff;
       border: 1.5px solid var(--blue-border);
@@ -216,9 +214,8 @@
 
 <div class="container">
 
-  <!-- กล่องเข้าสู่ระบบ -->
   <div class="card" id="loginBox">
-    <div class="title">Admin Dashboard 💙 Gxgie</div>
+    <div class="title">Admin Dashboard ♡ Gxgie</div>
     <div class="field-group">
       <label class="field-label">อีเมลแอดมิน (Email)</label>
       <input type="email" id="loginEmail" class="input-box" placeholder="minasukikub@gmail.com">
@@ -227,22 +224,20 @@
       <label class="field-label">รหัสผ่าน (Password)</label>
       <input type="password" id="loginPass" class="input-box" placeholder="••••••••">
     </div>
-    <button type="button" class="btn" onclick="handleAdminLogin()">เข้าสู่ระบบแอดมิน 💙</button>
+    <button type="button" class="btn" onclick="handleAdminLogin()">เข้าสู่ระบบแอดมิน ♡</button>
   </div>
 
-  <!-- แผงควบคุมแอดมิน -->
   <div id="dashboardBox" class="hidden">
     <div class="nav-tabs">
-      <button type="button" class="tab-btn active" onclick="switchTab('general', this)">1. ข้อมูลร้าน 💙</button>
-      <button type="button" class="tab-btn" onclick="switchTab('highlights', this)">2. ไฮไลท์ (ไม่จำกัดรูป) 💙</button>
-      <button type="button" class="tab-btn" onclick="switchTab('reviews', this)">3. จัดการรีวิว 💙</button>
-      <button type="button" class="tab-btn" onclick="switchTab('account', this)">4. บัญชี 💙</button>
+      <button type="button" class="tab-btn active" onclick="switchTab('general', this)">1. ข้อมูลร้าน ♡</button>
+      <button type="button" class="tab-btn" onclick="switchTab('highlights', this)">2. ไฮไลท์ ♡</button>
+      <button type="button" class="tab-btn" onclick="switchTab('reviews', this)">3. จัดการรีวิว ♡</button>
+      <button type="button" class="tab-btn" onclick="switchTab('account', this)">4. บัญชี ♡</button>
     </div>
 
-    <!-- แท็บ 1: ข้อมูลร้าน -->
     <div class="tab-content active" id="tab-general">
       <div class="card">
-        <div class="title">แก้ไขโปรไฟล์หน้าร้าน 💙</div>
+        <div class="title">แก้ไขโปรไฟล์หน้าร้าน ♡</div>
         <div class="field-group">
           <label class="field-label">ชื่อร้าน</label>
           <input type="text" id="cfgShopName" class="input-box">
@@ -263,17 +258,16 @@
           <label class="field-label">ลิงก์เพลงพื้นหลัง (.mp3)</label>
           <input type="text" id="cfgMusic" class="input-box">
         </div>
-        <button type="button" class="btn" onclick="saveGeneralConfig()">บันทึกข้อมูลร้านค้า 💙</button>
+        <button type="button" class="btn" onclick="saveGeneralConfig()">บันทึกข้อมูลร้านค้า ♡</button>
       </div>
     </div>
 
-    <!-- แท็บ 2: จัดการ Highlights -->
     <div class="tab-content" id="tab-highlights">
       <div class="card">
-        <div class="title">เพิ่มหมวดหมู่ไฮไลท์ใหม่ 💙</div>
+        <div class="title">เพิ่มหมวดหมู่ไฮไลท์ใหม่ ♡</div>
         <div class="field-group">
-          <label class="field-label">ชื่อไฮไลท์ (เช่น รีวิว, สติกเกอร์, เครดิต)</label>
-          <input type="text" id="newHlTitle" class="input-box" placeholder="ตั้งชื่อไฮไลท์...">
+          <label class="field-label">ชื่อไฮไลท์</label>
+          <input type="text" id="newHlTitle" class="input-box" placeholder="ตั้งชื่อไฮไลท์ ♡">
         </div>
         <div class="field-group">
           <label class="field-label">ลิงก์รูปปกไฮไลท์ (Cover URL)</label>
@@ -281,36 +275,34 @@
         </div>
         <div class="field-group">
           <label class="field-label">ลิงก์รูปภาพด้านใน (ใส่ได้ไม่จำกัด ขึ้นบรรทัดใหม่เพื่อใส่หลายรูป)</label>
-          <textarea id="newHlImages" class="textarea-box" placeholder="วางลิงก์รูปภาพต้นฉบับที่นี่ (1 บรรทัด = 1 รูป ใส่กี่ร้อยรูปก็ได้ค่ะ)"></textarea>
+          <textarea id="newHlImages" class="textarea-box" placeholder="วางลิงก์รูปภาพต้นฉบับที่นี่ (1 บรรทัด = 1 รูป) ♡"></textarea>
         </div>
-        <button type="button" class="btn" onclick="createNewHighlight()">+ สร้างไฮไลท์นี้ 💙</button>
+        <button type="button" class="btn" onclick="createNewHighlight()">สร้างไฮไลท์นี้ ♡</button>
       </div>
 
       <div class="card">
-        <div class="title">รายการไฮไลท์ทั้งหมด (เพิ่ม / ลบรูปได้ไม่จำกัด) 💙</div>
+        <div class="title">รายการไฮไลท์ทั้งหมด ♡</div>
         <p style="font-size:12px; color:var(--text-muted); text-align:center; margin-bottom:12px;">
-          * รูปภาพจะใช้ลิงก์ต้นฉบับความคมชัด 100% โดยไม่มีการลดขนาดหรือบีบอัดไฟล์
+          รูปภาพใช้ลิงก์ต้นฉบับความคมชัด 100% โดยไม่มีการลดขนาดหรือบีบอัดไฟล์ ♡
         </p>
         <div id="adminHighlightsList">
-          <p style="text-align:center; font-size:13px; color:var(--text-muted);">กำลังโหลดข้อมูลไฮไลท์...</p>
+          <p style="text-align:center; font-size:13px; color:var(--text-muted);">กำลังโหลดข้อมูลไฮไลท์ ♡</p>
         </div>
       </div>
     </div>
 
-    <!-- แท็บ 3: จัดการรีวิว -->
     <div class="tab-content" id="tab-reviews">
       <div class="card">
-        <div class="title">จัดการรีวิวลูกค้าทั้งหมด 💙</div>
+        <div class="title">จัดการรีวิวลูกค้าทั้งหมด ♡</div>
         <div id="adminReviewsList">
-          <p style="text-align:center; font-size:13px; color:var(--text-muted);">กำลังโหลดรีวิว...</p>
+          <p style="text-align:center; font-size:13px; color:var(--text-muted);">กำลังโหลดรีวิว ♡</p>
         </div>
       </div>
     </div>
 
-    <!-- แท็บ 4: บัญชีแอดมิน -->
     <div class="tab-content" id="tab-account">
       <div class="card">
-        <div class="title">ตั้งค่าบัญชีเข้าสู่ระบบ 💙</div>
+        <div class="title">ตั้งค่าบัญชีเข้าสู่ระบบ ♡</div>
         <div class="field-group">
           <label class="field-label">อีเมลแอดมิน</label>
           <input type="email" id="editAdminEmail" class="input-box">
@@ -319,8 +311,8 @@
           <label class="field-label">รหัสผ่านใหม่ (ปล่อยว่างหากไม่ต้องการเปลี่ยน)</label>
           <input type="password" id="editAdminPass" class="input-box" placeholder="รหัสผ่านใหม่">
         </div>
-        <button type="button" class="btn" onclick="updateAdminAccount()">บันทึกข้อมูลบัญชี 💙</button>
-        <button type="button" class="btn btn-secondary" onclick="logoutAdmin()">ออกจากระบบ 💙</button>
+        <button type="button" class="btn" onclick="updateAdminAccount()">บันทึกข้อมูลบัญชี ♡</button>
+        <button type="button" class="btn btn-secondary" onclick="logoutAdmin()">ออกจากระบบ ♡</button>
       </div>
     </div>
   </div>
@@ -345,11 +337,9 @@
   const DB_REVIEWS = "gxgie_reviews";
   const DB_HIGHLIGHTS = "gxgie_highlights";
 
-  // ข้อมูลเริ่มต้นตามที่กำหนด
   let currentAdminEmail = "minasukikub@gmail.com";
   let currentAdminPass = "creditgxgie00469";
 
-  // ซิงค์ข้อมูลรหัสผ่านหากมีการแก้ไขใน Firestore
   db.collection(DB_SITE).doc("admin").onSnapshot(doc => {
     if (doc.exists) {
       const d = doc.data();
@@ -367,7 +357,7 @@
       document.getElementById('dashboardBox').classList.remove('hidden');
       initAdminDashboard();
     } else {
-      alert('อีเมลหรือรหัสผ่านแอดมินไม่ถูกต้องค่ะ 💙');
+      alert('อีเมลหรือรหัสผ่านแอดมินไม่ถูกต้องค่ะ ♡');
     }
   }
 
@@ -379,7 +369,6 @@
   }
 
   function initAdminDashboard() {
-    // โหลดข้อมูลร้าน
     db.collection(DB_SITE).doc("config").get().then(doc => {
       const d = doc.exists ? doc.data() : {};
       document.getElementById('cfgShopName').value = d.shopName || "Gxgie";
@@ -406,10 +395,9 @@
     };
 
     await db.collection(DB_SITE).doc("config").set(payload, { merge: true });
-    alert('บันทึกข้อมูลโปรไฟล์ร้านค้าเรียบร้อยแล้วค่ะ 💙');
+    alert('บันทึกข้อมูลโปรไฟล์ร้านค้าเรียบร้อยแล้วค่ะ ♡');
   }
 
-  // สร้างไฮไลท์ใหม่พร้อมบันทึกรูปแยกทีละเอกสารใน subcollection 'images' (รองรับไม่จำกัดจำนวน)
   async function createNewHighlight() {
     const title = document.getElementById('newHlTitle').value.trim();
     const coverInput = document.getElementById('newHlCover').value.trim();
@@ -418,9 +406,9 @@
       .map(u => u.trim())
       .filter(u => u.length > 0);
 
-    if (!title) return alert('กรุณาตั้งชื่อไฮไลท์ก่อนนะคะ 💙');
+    if (!title) return alert('กรุณาตั้งชื่อไฮไลท์ก่อนนะคะ ♡');
     if (rawUrls.length === 0 && !coverInput) {
-      return alert('กรุณาใส่ลิงก์รูปภาพอย่างน้อย 1 รูปค่ะ 💙');
+      return alert('กรุณาใส่ลิงก์รูปภาพอย่างน้อย 1 รูปค่ะ ♡');
     }
 
     const coverUrl = coverInput || rawUrls[0];
@@ -433,7 +421,6 @@
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
       });
 
-      // บันทึกรูปภาพทีละรายการลง subcollection (ไม่ติดขีดจำกัดขนาดเอกสาร 1MB)
       for (let i = 0; i < rawUrls.length; i++) {
         await hlRef.collection("images").add({
           url: rawUrls[i],
@@ -444,7 +431,7 @@
       document.getElementById('newHlTitle').value = '';
       document.getElementById('newHlCover').value = '';
       document.getElementById('newHlImages').value = '';
-      alert(`สร้างไฮไลท์ "${title}" พร้อมรูปภาพ ${rawUrls.length} รูปเรียบร้อยแล้วค่ะ 💙`);
+      alert(`สร้างไฮไลท์ "${title}" พร้อมรูปภาพ ${rawUrls.length} รูปเรียบร้อยแล้วค่ะ ♡`);
       renderHighlightsAdminList();
     } catch (err) {
       alert('เกิดข้อผิดพลาดในการสร้างไฮไลท์: ' + err.message);
@@ -462,7 +449,7 @@
     const snap = await db.collection(DB_HIGHLIGHTS).orderBy("order", "asc").get();
 
     if (snap.empty) {
-      container.innerHTML = '<p style="text-align:center; font-size:13px; color:var(--text-muted); padding:14px;">ยังไม่มีไฮไลท์ในระบบ สามารถเพิ่มด้านบนได้เลยค่ะ 💙</p>';
+      container.innerHTML = '<p style="text-align:center; font-size:13px; color:var(--text-muted); padding:14px;">ยังไม่มีไฮไลท์ในระบบ สามารถเพิ่มด้านบนได้เลยค่ะ ♡</p>';
       return;
     }
 
@@ -479,7 +466,7 @@
         thumbsHtml += `
           <div class="hl-thumb-item">
             <img src="${imgData.url}" alt="img">
-            <button type="button" class="hl-thumb-del" title="ลบรูปนี้" onclick="deleteSingleHighlightImage('${hlId}', '${imgDoc.id}')">✕</button>
+            <button type="button" class="hl-thumb-del" title="ลบรูปนี้" onclick="deleteSingleHighlightImage('${hlId}', '${imgDoc.id}')">x</button>
           </div>
         `;
       });
@@ -492,15 +479,15 @@
             <img src="${hl.cover}" style="width:42px; height:42px; border-radius:50%; object-fit:cover; border:2px solid var(--blue-main);">
             <div>
               <div style="font-weight:700; font-size:14.5px; color:var(--blue-deep);">${escapeHtml(hl.title)}</div>
-              <div style="font-size:11.5px; color:var(--text-muted);">จำนวนรูปด้านใน: <strong>${imgSnap.size}</strong> รูป (ความชัด 100%)</div>
+              <div style="font-size:11.5px; color:var(--text-muted);">จำนวนรูปด้านใน: <strong>${imgSnap.size}</strong> รูป ♡</div>
             </div>
           </div>
           <button type="button" class="btn-danger-sm" onclick="deleteEntireHighlight('${hlId}', '${escapeHtml(hl.title)}')">ลบไฮไลท์นี้</button>
         </div>
 
         <div style="margin-top:8px;">
-          <textarea id="add-imgs-${hlId}" class="textarea-box" style="min-height:62px; font-size:12.5px;" placeholder="วางลิงก์รูปภาพเพิ่มในไฮไลท์นี้ (ใส่ได้ไม่จำกัด ขึ้นบรรทัดใหม่เพื่อใส่หลายรูป)"></textarea>
-          <button type="button" class="btn btn-secondary" style="padding:8px; font-size:12.5px; margin-top:6px;" onclick="appendImagesToHighlight('${hlId}')">+ เพิ่มรูปเข้าไฮไลท์นี้ 💙</button>
+          <textarea id="add-imgs-${hlId}" class="textarea-box" style="min-height:62px; font-size:12.5px;" placeholder="วางลิงก์รูปภาพเพิ่มในไฮไลท์นี้ (ใส่ได้ไม่จำกัด ขึ้นบรรทัดใหม่เพื่อใส่หลายรูป) ♡"></textarea>
+          <button type="button" class="btn btn-secondary" style="padding:8px; font-size:12.5px; margin-top:6px;" onclick="appendImagesToHighlight('${hlId}')">เพิ่มรูปเข้าไฮไลท์นี้ ♡</button>
         </div>
 
         <div class="hl-thumb-grid">
@@ -515,7 +502,7 @@
     const box = document.getElementById(`add-imgs-${hlId}`);
     if (!box) return;
     const urls = box.value.split(/\r?\n/).map(u => u.trim()).filter(u => u.length > 0);
-    if (urls.length === 0) return alert('กรุณาวางลิงก์รูปภาพก่อนกดเพิ่มนะคะ 💙');
+    if (urls.length === 0) return alert('กรุณาวางลิงก์รูปภาพก่อนกดเพิ่มนะคะ ♡');
 
     for (let i = 0; i < urls.length; i++) {
       await db.collection(DB_HIGHLIGHTS).doc(hlId).collection("images").add({
@@ -525,36 +512,34 @@
     }
 
     box.value = '';
-    alert(`เพิ่มรูปภาพอีก ${urls.length} รูปเรียบร้อยแล้วค่ะ 💙`);
+    alert(`เพิ่มรูปภาพอีก ${urls.length} รูปเรียบร้อยแล้วค่ะ ♡`);
     renderHighlightsAdminList();
   }
 
   async function deleteSingleHighlightImage(hlId, imgId) {
-    if (!confirm('ต้องการลบรูปภาพนี้ออกจากไฮไลท์ใช่ไหมคะ? 💙')) return;
+    if (!confirm('ต้องการลบรูปภาพนี้ออกจากไฮไลท์ใช่ไหมคะ? ♡')) return;
     await db.collection(DB_HIGHLIGHTS).doc(hlId).collection("images").doc(imgId).delete();
     renderHighlightsAdminList();
   }
 
   async function deleteEntireHighlight(hlId, title) {
-    if (!confirm(`ต้องการลบไฮไลท์ "${title}" และรูปภาพทั้งหมดในหมวดนี้ใช่ไหมคะ? 💙`)) return;
+    if (!confirm(`ต้องการลบไฮไลท์ "${title}" และรูปภาพทั้งหมดในหมวดนี้ใช่ไหมคะ? ♡`)) return;
 
-    // ลบรูปย่อยทั้งหมดก่อน
     const imgSnap = await db.collection(DB_HIGHLIGHTS).doc(hlId).collection("images").get();
     const batch = db.batch();
     imgSnap.forEach(d => batch.delete(d.ref));
     batch.delete(db.collection(DB_HIGHLIGHTS).doc(hlId));
     await batch.commit();
 
-    alert(`ลบไฮไลท์ "${title}" เรียบร้อยแล้วค่ะ 💙`);
+    alert(`ลบไฮไลท์ "${title}" เรียบร้อยแล้วค่ะ ♡`);
     renderHighlightsAdminList();
   }
 
-  // จัดการรีวิว
   function listenReviewsAdmin() {
     db.collection(DB_REVIEWS).orderBy("createdAt", "desc").onSnapshot(snap => {
       const box = document.getElementById('adminReviewsList');
       if (snap.empty) {
-        box.innerHTML = '<p style="text-align:center; font-size:13px; color:var(--text-muted); padding:14px;">ยังไม่มีรีวิวในระบบค่ะ 💙</p>';
+        box.innerHTML = '<p style="text-align:center; font-size:13px; color:var(--text-muted); padding:14px;">ยังไม่มีรีวิวในระบบค่ะ ♡</p>';
         return;
       }
 
@@ -580,7 +565,7 @@
   }
 
   async function deleteReview(revId) {
-    if (!confirm('ต้องการลบรีวิวนี้ใช่ไหมคะ? 💙')) return;
+    if (!confirm('ต้องการลบรีวิวนี้ใช่ไหมคะ? ♡')) return;
     await db.collection(DB_REVIEWS).doc(revId).delete();
   }
 
@@ -593,7 +578,7 @@
 
     await db.collection(DB_SITE).doc("admin").set(payload, { merge: true });
     document.getElementById('editAdminPass').value = '';
-    alert('อัปเดตข้อมูลบัญชีแอดมินเรียบร้อยแล้วค่ะ 💙');
+    alert('อัปเดตข้อมูลบัญชีแอดมินเรียบร้อยแล้วค่ะ ♡');
   }
 
   function logoutAdmin() {
