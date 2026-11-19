@@ -118,7 +118,7 @@
       border-top: 1px dashed var(--blue-border);
     }
     .highlights-label {
-      font-size: 12.5px;
+      font-size: 13px;
       font-weight: 700;
       color: var(--blue-deep);
       margin-bottom: 10px;
@@ -441,10 +441,12 @@
 thanks for your support 
 line : @632wdjwj</div>
 
-      <!-- แถบ Highlights -->
-      <div class="highlights-section" id="highlightsWrapper" style="display:none;">
-        <div class="highlights-label">Highlights ♡</div>
-        <div class="highlights-scroll" id="highlightsContainer"></div>
+      <!-- แถบ Highlights (แสดงหัวข้อ Highlights เสมอ) -->
+      <div class="highlights-section" id="highlightsWrapper">
+        <div class="highlights-label">Highlights</div>
+        <div class="highlights-scroll" id="highlightsContainer">
+          <div style="font-size:12px; color:var(--text-muted); padding:4px 0;">ยังไม่มีรายการไฮไลท์ ♡</div>
+        </div>
       </div>
     </div>
 
@@ -565,18 +567,16 @@ line : @632wdjwj</div>
       }
     });
 
+    // ดึงข้อมูล Highlights และรูปภาพทั้งหมด (รองรับไฟล์รูปจากเครื่องความชัด 100% แบบไม่จำกัด)
     db.collection(DB_HIGHLIGHTS).orderBy("order", "asc").onSnapshot(async snap => {
-      const wrapper = document.getElementById('highlightsWrapper');
       const container = document.getElementById('highlightsContainer');
 
       if (snap.empty) {
-        wrapper.style.display = 'none';
-        container.innerHTML = '';
+        container.innerHTML = '<div style="font-size:12px; color:var(--text-muted); padding:4px 0;">ยังไม่มีรายการไฮไลท์ ♡</div>';
         highlightsMap = {};
         return;
       }
 
-      wrapper.style.display = 'block';
       container.innerHTML = '';
       highlightsMap = {};
 
@@ -587,17 +587,15 @@ line : @632wdjwj</div>
         const imgSnap = await db.collection(DB_HIGHLIGHTS).doc(hlId).collection("images").orderBy("createdAt", "asc").get();
         const imgUrls = [];
         imgSnap.forEach(imgDoc => {
-          if (imgDoc.data().url) imgUrls.push(imgDoc.data().url);
+          const item = imgDoc.data();
+          const src = item.dataUrl || item.url;
+          if (src) imgUrls.push(src);
         });
-
-        if (Array.isArray(hlData.legacyImages)) {
-          hlData.legacyImages.forEach(u => { if (u && !imgUrls.includes(u)) imgUrls.push(u); });
-        }
 
         highlightsMap[hlId] = {
           id: hlId,
           title: hlData.title || "Highlight",
-          cover: hlData.cover || imgUrls[0] || DEFAULT_PROFILE_URL,
+          cover: hlData.coverDataUrl || hlData.cover || imgUrls[0] || DEFAULT_PROFILE_URL,
           images: imgUrls
         };
 
