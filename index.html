@@ -28,7 +28,7 @@
       --star-gold: #f59e0b;
     }
 
-    * {
+    *, *::before, *::after {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
@@ -62,7 +62,7 @@
       margin-bottom: 12px;
     }
 
-    /* ส่วนโปรไฟล์ร้าน */
+    /* ส่วนโปรไฟล์ร้าน: แบนเนอร์และโปรไฟล์แยกกันชัดเจน */
     .banner-wrap {
       width: 100%;
       height: 145px;
@@ -79,8 +79,10 @@
     }
     .profile-wrap {
       position: relative;
-      margin-top: -46px;
+      margin-top: 16px;
       text-align: center;
+      display: flex;
+      justify-content: center;
     }
     .profile-wrap img {
       width: 92px;
@@ -90,6 +92,7 @@
       border: 3.5px solid #ffffff;
       box-shadow: 0 6px 18px rgba(30, 64, 175, 0.2);
       background: #ffffff;
+      display: block;
     }
     .shop-name-title {
       font-size: 21px;
@@ -111,11 +114,10 @@
       text-align: center;
     }
 
-    /* ส่วน Highlights */
+    /* ส่วน Highlights (ไม่มีเส้นปะคั่นด้านบน) */
     .highlights-section {
       margin-top: 14px;
-      padding-top: 12px;
-      border-top: 1px dashed var(--blue-border);
+      padding-top: 4px;
     }
     .highlights-label {
       font-size: 13px;
@@ -441,7 +443,7 @@
 thanks for your support 
 line : @632wdjwj</div>
 
-      <!-- แถบ Highlights (แสดงหัวข้อ Highlights เสมอ) -->
+      <!-- แถบ Highlights (แสดงหัวข้อ Highlights เสมอ ไม่มีเส้นปะ) -->
       <div class="highlights-section" id="highlightsWrapper">
         <div class="highlights-label">Highlights</div>
         <div class="highlights-scroll" id="highlightsContainer">
@@ -567,7 +569,6 @@ line : @632wdjwj</div>
       }
     });
 
-    // ดึงข้อมูล Highlights และรูปภาพทั้งหมด (รองรับไฟล์รูปจากเครื่องความชัด 100% แบบไม่จำกัด)
     db.collection(DB_HIGHLIGHTS).orderBy("order", "asc").onSnapshot(async snap => {
       const container = document.getElementById('highlightsContainer');
 
