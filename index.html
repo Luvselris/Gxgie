@@ -25,7 +25,7 @@
       --text-muted: #64748b;
       --card-bg: rgba(255, 255, 255, 0.96);
       --shadow-soft: 0 10px 28px rgba(59, 130, 246, 0.14);
-      --star-gold: #f59e0b;
+      --star-blue: #2563eb;
     }
 
     *, *::before, *::after {
@@ -62,7 +62,7 @@
       margin-bottom: 12px;
     }
 
-    /* ส่วนโปรไฟล์ร้าน: แบนเนอร์และโปรไฟล์แยกกันชัดเจน */
+    /* ส่วนโปรไฟล์ร้าน: แบนเนอร์และโปรไฟล์ซ้อนติดกัน */
     .banner-wrap {
       width: 100%;
       height: 145px;
@@ -79,7 +79,7 @@
     }
     .profile-wrap {
       position: relative;
-      margin-top: 16px;
+      margin-top: -46px;
       text-align: center;
       display: flex;
       justify-content: center;
@@ -114,7 +114,7 @@
       text-align: center;
     }
 
-    /* ส่วน Highlights (ไม่มีเส้นปะคั่นด้านบน) */
+    /* ส่วน Highlights */
     .highlights-section {
       margin-top: 14px;
       padding-top: 4px;
@@ -229,7 +229,7 @@
       resize: vertical;
     }
 
-    /* ดาวให้คะแนน */
+    /* ดาวให้คะแนนโทนสีฟ้า */
     .star-selector {
       display: flex;
       justify-content: center;
@@ -238,14 +238,14 @@
     }
     .star-btn {
       font-size: 28px;
-      color: #cbd5e1;
+      color: #bfdbfe;
       cursor: pointer;
       transition: transform 0.15s, color 0.15s;
       user-select: none;
     }
     .star-btn.active {
-      color: var(--star-gold);
-      text-shadow: 0 2px 8px rgba(245, 158, 11, 0.35);
+      color: var(--star-blue);
+      text-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
     }
     .star-btn:active { transform: scale(1.2); }
 
@@ -301,7 +301,7 @@
     }
     .review-stars-display {
       font-size: 12.5px;
-      color: var(--star-gold);
+      color: var(--star-blue);
       letter-spacing: 1px;
       line-height: 1.2;
     }
@@ -443,7 +443,7 @@
 thanks for your support 
 line : @632wdjwj</div>
 
-      <!-- แถบ Highlights (แสดงหัวข้อ Highlights เสมอ ไม่มีเส้นปะ) -->
+      <!-- แถบ Highlights -->
       <div class="highlights-section" id="highlightsWrapper">
         <div class="highlights-label">Highlights</div>
         <div class="highlights-scroll" id="highlightsContainer">
