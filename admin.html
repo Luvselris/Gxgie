@@ -59,11 +59,11 @@
       margin-bottom: 14px;
     }
 
-    .field-group { margin-bottom: 12px; }
+    .field-group { margin-bottom: 14px; }
     .field-label {
       font-size: 13px;
       font-weight: 600;
-      margin-bottom: 4px;
+      margin-bottom: 6px;
       display: block;
       color: var(--text-dark);
     }
@@ -80,6 +80,46 @@
     }
     .input-box:focus, .textarea-box:focus { border-color: var(--blue-main); }
     .textarea-box { min-height: 85px; resize: vertical; }
+
+    /* กล่องเลือกรูปภาพจากเครื่อง */
+    .file-picker-box {
+      border: 2px dashed var(--blue-main);
+      border-radius: 16px;
+      padding: 14px;
+      text-align: center;
+      background: #f8fafc;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .file-picker-box:active { background: var(--blue-soft); }
+    .file-picker-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--blue-deep);
+    }
+    .file-picker-sub {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      margin-top: 3px;
+    }
+    .preview-single-img {
+      width: 100%;
+      max-height: 140px;
+      object-fit: cover;
+      border-radius: 12px;
+      margin-top: 8px;
+      border: 1px solid var(--blue-border);
+      display: block;
+    }
+    .preview-avatar-img {
+      width: 76px;
+      height: 76px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin: 8px auto 0;
+      border: 2px solid var(--blue-main);
+      display: block;
+    }
 
     .nav-tabs {
       display: flex;
@@ -125,6 +165,7 @@
       margin-top: 8px;
     }
     .btn:active { transform: scale(0.98); }
+    .btn:disabled { opacity: 0.6; cursor: not-allowed; }
 
     .btn-secondary {
       background: #ffffff;
@@ -235,6 +276,7 @@
       <button type="button" class="tab-btn" onclick="switchTab('account', this)">4. บัญชี ♡</button>
     </div>
 
+    <!-- แท็บ 1: ข้อมูลร้าน (เลือกรูปจากเครื่องได้ทันที) -->
     <div class="tab-content active" id="tab-general">
       <div class="card">
         <div class="title">แก้ไขโปรไฟล์หน้าร้าน ♡</div>
@@ -246,51 +288,75 @@
           <label class="field-label">คำอธิบายไบโอ (Bio)</label>
           <textarea id="cfgShopBio" class="textarea-box"></textarea>
         </div>
+
         <div class="field-group">
-          <label class="field-label">ลิงก์รูปแบนเนอร์ (Banner URL)</label>
-          <input type="text" id="cfgBanner" class="input-box">
+          <label class="field-label">รูปแบนเนอร์ (Banner)</label>
+          <div class="file-picker-box" onclick="document.getElementById('bannerFileInput').click()">
+            <div class="file-picker-title">กดเลือกรูปแบนเนอร์จากในเครื่อง ♡</div>
+            <div class="file-picker-sub">ความคมชัดต้นฉบับ 100% ไม่ลดขนาดภาพ</div>
+            <img id="previewBanner" class="preview-single-img" src="https://file.garden/asG8Gt-rqWIpi3II/IMG_7602.png" alt="Banner">
+          </div>
+          <input type="file" id="bannerFileInput" accept="image/*" style="display:none;" onchange="handleSingleImagePick(event, 'banner')">
         </div>
+
         <div class="field-group">
-          <label class="field-label">ลิงก์รูปโปรไฟล์ (Profile URL)</label>
-          <input type="text" id="cfgProfile" class="input-box">
+          <label class="field-label">รูปโปรไฟล์ (Profile)</label>
+          <div class="file-picker-box" onclick="document.getElementById('profileFileInput').click()">
+            <div class="file-picker-title">กดเลือกรูปโปรไฟล์จากในเครื่อง ♡</div>
+            <div class="file-picker-sub">ความคมชัดต้นฉบับ 100% ไม่ลดขนาดภาพ</div>
+            <img id="previewProfile" class="preview-avatar-img" src="https://file.garden/asG8Gt-rqWIpi3II/%E0%B9%84%E0%B8%A1%E0%B9%88%E0%B8%A1%E0%B8%B5%E0%B8%8A%E0%B8%B7%E0%B9%88%E0%B8%AD%2055_20261119201642.jpeg" alt="Profile">
+          </div>
+          <input type="file" id="profileFileInput" accept="image/*" style="display:none;" onchange="handleSingleImagePick(event, 'profile')">
         </div>
+
         <div class="field-group">
           <label class="field-label">ลิงก์เพลงพื้นหลัง (.mp3)</label>
           <input type="text" id="cfgMusic" class="input-box">
         </div>
-        <button type="button" class="btn" onclick="saveGeneralConfig()">บันทึกข้อมูลร้านค้า ♡</button>
+        <button type="button" class="btn" id="btnSaveGeneral" onclick="saveGeneralConfig()">บันทึกข้อมูลร้านค้า ♡</button>
       </div>
     </div>
 
+    <!-- แท็บ 2: ไฮไลท์ (อัปโหลดรูปจากเครื่องโดยตรง ไม่จำกัดจำนวน) -->
     <div class="tab-content" id="tab-highlights">
       <div class="card">
         <div class="title">เพิ่มหมวดหมู่ไฮไลท์ใหม่ ♡</div>
         <div class="field-group">
           <label class="field-label">ชื่อไฮไลท์</label>
-          <input type="text" id="newHlTitle" class="input-box" placeholder="ตั้งชื่อไฮไลท์ ♡">
+          <input type="text" id="newHlTitle" class="input-box" placeholder="ตั้งชื่อไฮไลท์ เช่น old credit ♡">
         </div>
+
         <div class="field-group">
-          <label class="field-label">ลิงก์รูปปกไฮไลท์ (Cover URL)</label>
-          <input type="text" id="newHlCover" class="input-box" placeholder="https://...">
+          <label class="field-label">เลือกรูปปกไฮไลท์ (Cover)</label>
+          <div class="file-picker-box" onclick="document.getElementById('newHlCoverFile').click()">
+            <div class="file-picker-title" id="newHlCoverLabel">กดเลือกรูปปกจากในเครื่อง ♡</div>
+            <div class="file-picker-sub">หากไม่เลือก ระบบจะใช้รูปแรกด้านในเป็นปกให้อัตโนมัติ</div>
+            <img id="previewNewHlCover" class="preview-avatar-img hidden" src="" alt="">
+          </div>
+          <input type="file" id="newHlCoverFile" accept="image/*" style="display:none;" onchange="handleNewHlCoverPick(event)">
         </div>
+
         <div class="field-group">
-          <label class="field-label">ลิงก์รูปภาพด้านใน (ใส่ได้ไม่จำกัด ขึ้นบรรทัดใหม่เพื่อใส่หลายรูป)</label>
-          <textarea id="newHlImages" class="textarea-box" placeholder="วางลิงก์รูปภาพต้นฉบับที่นี่ (1 บรรทัด = 1 รูป) ♡"></textarea>
+          <label class="field-label">เลือกรูปภาพด้านในไฮไลท์ (เลือกพร้อมกันหลายรูปได้ไม่จำกัด)</label>
+          <div class="file-picker-box" onclick="document.getElementById('newHlImagesFile').click()">
+            <div class="file-picker-title" id="newHlImagesLabel">กดเลือกรูปภาพจากอัลบั้ม (ใส่ได้ไม่จำกัดจำนวน) ♡</div>
+            <div class="file-picker-sub">ระบบใช้ไฟล์ต้นฉบับความคมชัด 100% ไม่ลดขนาดภาพเด็ดขาด</div>
+          </div>
+          <input type="file" id="newHlImagesFile" accept="image/*" multiple style="display:none;" onchange="handleNewHlMultiPick(event)">
         </div>
-        <button type="button" class="btn" onclick="createNewHighlight()">สร้างไฮไลท์นี้ ♡</button>
+
+        <button type="button" class="btn" id="btnCreateHl" onclick="createNewHighlight()">สร้างไฮไลท์นี้ ♡</button>
       </div>
 
       <div class="card">
         <div class="title">รายการไฮไลท์ทั้งหมด ♡</div>
-        <p style="font-size:12px; color:var(--text-muted); text-align:center; margin-bottom:12px;">
-          รูปภาพใช้ลิงก์ต้นฉบับความคมชัด 100% โดยไม่มีการลดขนาดหรือบีบอัดไฟล์ ♡
-        </p>
         <div id="adminHighlightsList">
           <p style="text-align:center; font-size:13px; color:var(--text-muted);">กำลังโหลดข้อมูลไฮไลท์ ♡</p>
         </div>
       </div>
     </div>
 
+    <!-- แท็บ 3: จัดการรีวิว -->
     <div class="tab-content" id="tab-reviews">
       <div class="card">
         <div class="title">จัดการรีวิวลูกค้าทั้งหมด ♡</div>
@@ -300,6 +366,7 @@
       </div>
     </div>
 
+    <!-- แท็บ 4: บัญชีแอดมิน -->
     <div class="tab-content" id="tab-account">
       <div class="card">
         <div class="title">ตั้งค่าบัญชีเข้าสู่ระบบ ♡</div>
@@ -337,8 +404,26 @@
   const DB_REVIEWS = "gxgie_reviews";
   const DB_HIGHLIGHTS = "gxgie_highlights";
 
+  const DEFAULT_BANNER_URL = "https://file.garden/asG8Gt-rqWIpi3II/IMG_7602.png";
+  const DEFAULT_PROFILE_URL = "https://file.garden/asG8Gt-rqWIpi3II/%E0%B9%84%E0%B8%A1%E0%B9%88%E0%B8%A1%E0%B8%B5%E0%B8%8A%E0%B8%B7%E0%B9%88%E0%B8%AD%2055_20261119201642.jpeg";
+
   let currentAdminEmail = "minasukikub@gmail.com";
   let currentAdminPass = "creditgxgie00469";
+
+  let pickedBannerDataUrl = "";
+  let pickedProfileDataUrl = "";
+  let pickedNewHlCoverDataUrl = "";
+  let pickedNewHlFiles = [];
+
+  // ฟังก์ชันอ่านไฟล์ภาพต้นฉบับตรงๆ ไม่มีการลดขนาดหรือบีบอัดคุณภาพ 100%
+  function readFileOriginal(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = () => reject(new Error("ไม่สามารถอ่านไฟล์รูปภาพได้"));
+      reader.readAsDataURL(file);
+    });
+  }
 
   db.collection(DB_SITE).doc("admin").onSnapshot(doc => {
     if (doc.exists) {
@@ -373,9 +458,15 @@
       const d = doc.exists ? doc.data() : {};
       document.getElementById('cfgShopName').value = d.shopName || "Gxgie";
       document.getElementById('cfgShopBio').value = d.shopBio || "Credit, plus one here \nthanks for your support \nline : @632wdjwj";
-      document.getElementById('cfgBanner').value = d.bannerImg || "https://file.garden/asG8Gt-rqWIpi3II/IMG_7602.png";
-      document.getElementById('cfgProfile').value = d.profileImg || "https://file.garden/asG8Gt-rqWIpi3II/IMG_7602.png";
       document.getElementById('cfgMusic').value = d.musicUrl || "https://file.garden/asG8Gt-rqWIpi3II/Cocktail%20%E0%B8%87%E0%B8%B2%E0%B8%99%E0%B9%80%E0%B8%95%E0%B9%89%E0%B8%99%E0%B8%A3%E0%B8%B3%E0%B9%83%E0%B8%99%E0%B8%84%E0%B8%B7%E0%B8%99%E0%B8%9E%E0%B8%A3%E0%B8%B0%E0%B8%88%E0%B8%B1%E0%B8%99%E0%B8%97%E0%B8%A3%E0%B9%8C%E0%B9%80%E0%B8%95%E0%B9%87%E0%B8%A1%E0%B8%94%E0%B8%A7%E0%B8%87.mp3";
+
+      const curBanner = d.bannerImg || DEFAULT_BANNER_URL;
+      const curProfile = (d.profileImg && d.profileImg !== DEFAULT_BANNER_URL) ? d.profileImg : DEFAULT_PROFILE_URL;
+
+      pickedBannerDataUrl = curBanner;
+      pickedProfileDataUrl = curProfile;
+      document.getElementById('previewBanner').src = curBanner;
+      document.getElementById('previewProfile').src = curProfile;
     });
 
     document.getElementById('editAdminEmail').value = currentAdminEmail;
@@ -384,57 +475,111 @@
     listenReviewsAdmin();
   }
 
-  async function saveGeneralConfig() {
-    const payload = {
-      shopName: document.getElementById('cfgShopName').value.trim(),
-      shopBio: document.getElementById('cfgShopBio').value.trim(),
-      bannerImg: document.getElementById('cfgBanner').value.trim(),
-      profileImg: document.getElementById('cfgProfile').value.trim(),
-      musicUrl: document.getElementById('cfgMusic').value.trim(),
-      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-    };
+  async function handleSingleImagePick(event, target) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const dataUrl = await readFileOriginal(file);
+    if (target === 'banner') {
+      pickedBannerDataUrl = dataUrl;
+      document.getElementById('previewBanner').src = dataUrl;
+    } else if (target === 'profile') {
+      pickedProfileDataUrl = dataUrl;
+      document.getElementById('previewProfile').src = dataUrl;
+    }
+  }
 
-    await db.collection(DB_SITE).doc("config").set(payload, { merge: true });
-    alert('บันทึกข้อมูลโปรไฟล์ร้านค้าเรียบร้อยแล้วค่ะ ♡');
+  async function saveGeneralConfig() {
+    const btn = document.getElementById('btnSaveGeneral');
+    btn.disabled = true;
+    btn.textContent = 'กำลังบันทึกข้อมูล ♡';
+
+    try {
+      const payload = {
+        shopName: document.getElementById('cfgShopName').value.trim(),
+        shopBio: document.getElementById('cfgShopBio').value.trim(),
+        bannerImg: pickedBannerDataUrl || DEFAULT_BANNER_URL,
+        profileImg: pickedProfileDataUrl || DEFAULT_PROFILE_URL,
+        musicUrl: document.getElementById('cfgMusic').value.trim(),
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      };
+
+      await db.collection(DB_SITE).doc("config").set(payload, { merge: true });
+      alert('บันทึกข้อมูลโปรไฟล์ร้านค้าเรียบร้อยแล้วค่ะ ♡');
+    } catch (err) {
+      alert('เกิดข้อผิดพลาด: ' + err.message);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'บันทึกข้อมูลร้านค้า ♡';
+    }
+  }
+
+  async function handleNewHlCoverPick(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    pickedNewHlCoverDataUrl = await readFileOriginal(file);
+    const imgEl = document.getElementById('previewNewHlCover');
+    imgEl.src = pickedNewHlCoverDataUrl;
+    imgEl.classList.remove('hidden');
+    document.getElementById('newHlCoverLabel').textContent = `เลือกปกเรียบร้อยแล้ว (${file.name}) ♡`;
+  }
+
+  function handleNewHlMultiPick(event) {
+    const files = Array.from(event.target.files || []);
+    if (files.length === 0) return;
+    pickedNewHlFiles = files;
+    document.getElementById('newHlImagesLabel').textContent = `เลือกไว้แล้วทั้งหมด ${files.length} รูป (พร้อมอัปโหลดความชัด 100%) ♡`;
   }
 
   async function createNewHighlight() {
     const title = document.getElementById('newHlTitle').value.trim();
-    const coverInput = document.getElementById('newHlCover').value.trim();
-    const rawUrls = document.getElementById('newHlImages').value
-      .split(/\r?\n/)
-      .map(u => u.trim())
-      .filter(u => u.length > 0);
-
     if (!title) return alert('กรุณาตั้งชื่อไฮไลท์ก่อนนะคะ ♡');
-    if (rawUrls.length === 0 && !coverInput) {
-      return alert('กรุณาใส่ลิงก์รูปภาพอย่างน้อย 1 รูปค่ะ ♡');
+    if (pickedNewHlFiles.length === 0 && !pickedNewHlCoverDataUrl) {
+      return alert('กรุณาเลือกรูปภาพอย่างน้อย 1 รูปค่ะ ♡');
     }
 
-    const coverUrl = coverInput || rawUrls[0];
+    const btn = document.getElementById('btnCreateHl');
+    btn.disabled = true;
 
     try {
+      let coverToSave = pickedNewHlCoverDataUrl;
+      if (!coverToSave && pickedNewHlFiles.length > 0) {
+        coverToSave = await readFileOriginal(pickedNewHlFiles[0]);
+      }
+
       const hlRef = await db.collection(DB_HIGHLIGHTS).add({
         title: title,
-        cover: coverUrl,
+        cover: coverToSave,
         order: Date.now(),
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
       });
 
-      for (let i = 0; i < rawUrls.length; i++) {
+      // อัปโหลดไฟล์รูปภาพต้นฉบับทีละรูปแยกเอกสารใน subcollection 'images' (ใส่ได้ไม่จำกัด ไม่ติดลิมิต 1MB)
+      for (let i = 0; i < pickedNewHlFiles.length; i++) {
+        btn.textContent = `กำลังบันทึกรูปที่ ${i + 1} / ${pickedNewHlFiles.length} ♡`;
+        const originalDataUrl = await readFileOriginal(pickedNewHlFiles[i]);
         await hlRef.collection("images").add({
-          url: rawUrls[i],
+          dataUrl: originalDataUrl,
           createdAt: Date.now() + i
         });
       }
 
+      // รีเซ็ตฟอร์ม
       document.getElementById('newHlTitle').value = '';
-      document.getElementById('newHlCover').value = '';
-      document.getElementById('newHlImages').value = '';
-      alert(`สร้างไฮไลท์ "${title}" พร้อมรูปภาพ ${rawUrls.length} รูปเรียบร้อยแล้วค่ะ ♡`);
+      document.getElementById('newHlCoverFile').value = '';
+      document.getElementById('newHlImagesFile').value = '';
+      pickedNewHlCoverDataUrl = '';
+      pickedNewHlFiles = [];
+      document.getElementById('previewNewHlCover').classList.add('hidden');
+      document.getElementById('newHlCoverLabel').textContent = 'กดเลือกรูปปกจากในเครื่อง ♡';
+      document.getElementById('newHlImagesLabel').textContent = 'กดเลือกรูปภาพจากอัลบั้ม (ใส่ได้ไม่จำกัดจำนวน) ♡';
+
+      alert(`สร้างไฮไลท์ "${title}" เรียบร้อยแล้วค่ะ ♡`);
       renderHighlightsAdminList();
     } catch (err) {
       alert('เกิดข้อผิดพลาดในการสร้างไฮไลท์: ' + err.message);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'สร้างไฮไลท์นี้ ♡';
     }
   }
 
@@ -463,9 +608,10 @@
       let thumbsHtml = '';
       imgSnap.forEach(imgDoc => {
         const imgData = imgDoc.data();
+        const src = imgData.dataUrl || imgData.url;
         thumbsHtml += `
           <div class="hl-thumb-item">
-            <img src="${imgData.url}" alt="img">
+            <img src="${src}" alt="img">
             <button type="button" class="hl-thumb-del" title="ลบรูปนี้" onclick="deleteSingleHighlightImage('${hlId}', '${imgDoc.id}')">x</button>
           </div>
         `;
@@ -486,8 +632,8 @@
         </div>
 
         <div style="margin-top:8px;">
-          <textarea id="add-imgs-${hlId}" class="textarea-box" style="min-height:62px; font-size:12.5px;" placeholder="วางลิงก์รูปภาพเพิ่มในไฮไลท์นี้ (ใส่ได้ไม่จำกัด ขึ้นบรรทัดใหม่เพื่อใส่หลายรูป) ♡"></textarea>
-          <button type="button" class="btn btn-secondary" style="padding:8px; font-size:12.5px; margin-top:6px;" onclick="appendImagesToHighlight('${hlId}')">เพิ่มรูปเข้าไฮไลท์นี้ ♡</button>
+          <input type="file" id="append-file-${hlId}" accept="image/*" multiple style="display:none;" onchange="appendFilesToHighlight(event, '${hlId}')">
+          <button type="button" id="append-btn-${hlId}" class="btn btn-secondary" style="padding:9px; font-size:12.5px; margin-top:4px;" onclick="document.getElementById('append-file-${hlId}').click()">+ เลือกรูปภาพจากเครื่องเพิ่มเข้าไฮไลท์นี้ ♡</button>
         </div>
 
         <div class="hl-thumb-grid">
@@ -498,22 +644,33 @@
     }
   }
 
-  async function appendImagesToHighlight(hlId) {
-    const box = document.getElementById(`add-imgs-${hlId}`);
-    if (!box) return;
-    const urls = box.value.split(/\r?\n/).map(u => u.trim()).filter(u => u.length > 0);
-    if (urls.length === 0) return alert('กรุณาวางลิงก์รูปภาพก่อนกดเพิ่มนะคะ ♡');
+  async function appendFilesToHighlight(event, hlId) {
+    const files = Array.from(event.target.files || []);
+    if (files.length === 0) return;
 
-    for (let i = 0; i < urls.length; i++) {
-      await db.collection(DB_HIGHLIGHTS).doc(hlId).collection("images").add({
-        url: urls[i],
-        createdAt: Date.now() + i
-      });
+    const btn = document.getElementById(`append-btn-${hlId}`);
+    if (btn) btn.disabled = true;
+
+    try {
+      for (let i = 0; i < files.length; i++) {
+        if (btn) btn.textContent = `กำลังเพิ่มรูปที่ ${i + 1} / ${files.length} ♡`;
+        const originalDataUrl = await readFileOriginal(files[i]);
+        await db.collection(DB_HIGHLIGHTS).doc(hlId).collection("images").add({
+          dataUrl: originalDataUrl,
+          createdAt: Date.now() + i
+        });
+      }
+
+      alert(`เพิ่มรูปภาพอีก ${files.length} รูปเรียบร้อยแล้วค่ะ ♡`);
+      renderHighlightsAdminList();
+    } catch (err) {
+      alert('เกิดข้อผิดพลาด: ' + err.message);
+    } finally {
+      if (btn) {
+        btn.disabled = false;
+        btn.textContent = '+ เลือกรูปภาพจากเครื่องเพิ่มเข้าไฮไลท์นี้ ♡';
+      }
     }
-
-    box.value = '';
-    alert(`เพิ่มรูปภาพอีก ${urls.length} รูปเรียบร้อยแล้วค่ะ ♡`);
-    renderHighlightsAdminList();
   }
 
   async function deleteSingleHighlightImage(hlId, imgId) {
