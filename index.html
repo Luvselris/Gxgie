@@ -52,34 +52,6 @@
       position: relative;
     }
 
-    /* ปุ่มเพลงลอยมุมขวาบน */
-    .music-floating-btn {
-      position: fixed;
-      top: 14px;
-      right: 14px;
-      padding: 0 12px;
-      height: 36px;
-      border-radius: 18px;
-      background: rgba(255, 255, 255, 0.95);
-      border: 1.5px solid var(--blue-border);
-      color: var(--blue-deep);
-      font-size: 12.5px;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      box-shadow: 0 4px 14px rgba(30, 64, 175, 0.15);
-      z-index: 999;
-      transition: transform 0.15s, background 0.2s, color 0.2s;
-    }
-    .music-floating-btn:active { transform: scale(0.94); }
-    .music-floating-btn.music-playing {
-      background: linear-gradient(135deg, var(--blue-main), var(--blue-deep));
-      color: #ffffff;
-      border-color: transparent;
-    }
-
     .glass-card {
       background: var(--card-bg);
       border: 1.5px solid #ffffff;
@@ -454,8 +426,6 @@
   <!-- เพลงพื้นหลัง -->
   <audio id="bgMusic" loop preload="auto" src="https://file.garden/asG8Gt-rqWIpi3II/Cocktail%20%E0%B8%87%E0%B8%B2%E0%B8%99%E0%B9%80%E0%B8%95%E0%B9%89%E0%B8%99%E0%B8%A3%E0%B8%B3%E0%B9%83%E0%B8%99%E0%B8%84%E0%B8%B7%E0%B8%99%E0%B8%9E%E0%B8%A3%E0%B8%B0%E0%B8%88%E0%B8%B1%E0%B8%99%E0%B8%97%E0%B8%A3%E0%B9%8C%E0%B9%80%E0%B8%95%E0%B9%87%E0%B8%A1%E0%B8%94%E0%B8%A7%E0%B8%87.mp3"></audio>
 
-  <button type="button" class="music-floating-btn" id="musicBtn" onclick="toggleMusic()">music ♡</button>
-
   <div class="container">
 
     <!-- 1. การ์ดโปรไฟล์ + ไฮไลท์ -->
@@ -464,7 +434,7 @@
         <img id="bannerImg" src="https://file.garden/asG8Gt-rqWIpi3II/IMG_7602.png" alt="Banner">
       </div>
       <div class="profile-wrap">
-        <img id="profileImg" src="hhttps://file.garden/asG8Gt-rqWIpi3II/%E0%B9%84%E0%B8%A1%E0%B9%88%E0%B8%A1%E0%B8%B5%E0%B8%8A%E0%B8%B7%E0%B9%88%E0%B8%AD%2055_20261119201642.jpeg" alt="Profile">
+        <img id="profileImg" src="https://file.garden/asG8Gt-rqWIpi3II/%E0%B9%84%E0%B8%A1%E0%B9%88%E0%B8%A1%E0%B8%B5%E0%B8%8A%E0%B8%B7%E0%B9%88%E0%B8%AD%2055_20261119201642.jpeg" alt="Profile">
       </div>
       <h1 class="shop-name-title" id="shopNameText">Gxgie ♡</h1>
       <div class="shop-bio-box" id="shopBioText">Credit, plus one here 
@@ -557,34 +527,20 @@ line : @632wdjwj</div>
     const DB_REVIEWS = "gxgie_reviews";
     const DB_HIGHLIGHTS = "gxgie_highlights";
 
+    const DEFAULT_PROFILE_URL = "https://file.garden/asG8Gt-rqWIpi3II/%E0%B9%84%E0%B8%A1%E0%B9%88%E0%B8%A1%E0%B8%B5%E0%B8%8A%E0%B8%B7%E0%B9%88%E0%B8%AD%2055_20261119201642.jpeg";
+    const OLD_PROFILE_URL = "https://file.garden/asG8Gt-rqWIpi3II/IMG_7602.png";
+
     let selectedRating = 5;
     let highlightsMap = {};
     let activeStoryId = null;
     let activeStoryIndex = 0;
 
     const music = document.getElementById('bgMusic');
-    const musicBtn = document.getElementById('musicBtn');
-
-    function toggleMusic() {
-      if (music.paused) {
-        music.play().then(() => {
-          musicBtn.classList.add('music-playing');
-          musicBtn.textContent = 'playing ♡';
-        }).catch(() => {});
-      } else {
-        music.pause();
-        musicBtn.classList.remove('music-playing');
-        musicBtn.textContent = 'music ♡';
-      }
-    }
 
     ['touchstart', 'click'].forEach(evt => {
       document.addEventListener(evt, () => {
         if (music.paused) {
-          music.play().then(() => {
-            musicBtn.classList.add('music-playing');
-            musicBtn.textContent = 'playing ♡';
-          }).catch(() => {});
+          music.play().catch(() => {});
         }
       }, { once: true });
     });
@@ -600,7 +556,11 @@ line : @632wdjwj</div>
         }
         if (d.shopBio !== undefined) document.getElementById('shopBioText').textContent = d.shopBio;
         if (d.bannerImg) document.getElementById('bannerImg').src = d.bannerImg;
-        if (d.profileImg) document.getElementById('profileImg').src = d.profileImg;
+        if (d.profileImg && d.profileImg !== OLD_PROFILE_URL) {
+          document.getElementById('profileImg').src = d.profileImg;
+        } else {
+          document.getElementById('profileImg').src = DEFAULT_PROFILE_URL;
+        }
         if (d.musicUrl && music.src !== d.musicUrl) music.src = d.musicUrl;
       }
     });
@@ -637,7 +597,7 @@ line : @632wdjwj</div>
         highlightsMap[hlId] = {
           id: hlId,
           title: hlData.title || "Highlight",
-          cover: hlData.cover || imgUrls[0] || "https://file.garden/asG8Gt-rqWIpi3II/IMG_7602.png",
+          cover: hlData.cover || imgUrls[0] || DEFAULT_PROFILE_URL,
           images: imgUrls
         };
 
