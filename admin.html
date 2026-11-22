@@ -24,7 +24,7 @@
       --card-bg: rgba(255, 255, 255, 0.97);
     }
 
-    * {
+    *, *::before, *::after {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
@@ -81,7 +81,6 @@
     .input-box:focus, .textarea-box:focus { border-color: var(--blue-main); }
     .textarea-box { min-height: 85px; resize: vertical; }
 
-    /* กล่องเลือกรูปภาพจากเครื่อง */
     .file-picker-box {
       border: 2px dashed var(--blue-main);
       border-radius: 16px;
@@ -276,7 +275,7 @@
       <button type="button" class="tab-btn" onclick="switchTab('account', this)">4. บัญชี ♡</button>
     </div>
 
-    <!-- แท็บ 1: ข้อมูลร้าน (เลือกรูปจากเครื่องได้ทันที) -->
+    <!-- แท็บ 1: ข้อมูลร้าน -->
     <div class="tab-content active" id="tab-general">
       <div class="card">
         <div class="title">แก้ไขโปรไฟล์หน้าร้าน ♡</div>
@@ -293,7 +292,7 @@
           <label class="field-label">รูปแบนเนอร์ (Banner)</label>
           <div class="file-picker-box" onclick="document.getElementById('bannerFileInput').click()">
             <div class="file-picker-title">กดเลือกรูปแบนเนอร์จากในเครื่อง ♡</div>
-            <div class="file-picker-sub">ความคมชัดต้นฉบับ 100% ไม่ลดขนาดภาพ</div>
+            <div class="file-picker-sub">ปรับขนาดอัตโนมัติเฉพาะรูปใหญ่เกินลิมิตฐานข้อมูล</div>
             <img id="previewBanner" class="preview-single-img" src="https://file.garden/asG8Gt-rqWIpi3II/IMG_7602.png" alt="Banner">
           </div>
           <input type="file" id="bannerFileInput" accept="image/*" style="display:none;" onchange="handleSingleImagePick(event, 'banner')">
@@ -303,7 +302,7 @@
           <label class="field-label">รูปโปรไฟล์ (Profile)</label>
           <div class="file-picker-box" onclick="document.getElementById('profileFileInput').click()">
             <div class="file-picker-title">กดเลือกรูปโปรไฟล์จากในเครื่อง ♡</div>
-            <div class="file-picker-sub">ความคมชัดต้นฉบับ 100% ไม่ลดขนาดภาพ</div>
+            <div class="file-picker-sub">ปรับขนาดอัตโนมัติเฉพาะรูปใหญ่เกินลิมิตฐานข้อมูล</div>
             <img id="previewProfile" class="preview-avatar-img" src="https://file.garden/asG8Gt-rqWIpi3II/%E0%B9%84%E0%B8%A1%E0%B9%88%E0%B8%A1%E0%B8%B5%E0%B8%8A%E0%B8%B7%E0%B9%88%E0%B8%AD%2055_20261119201642.jpeg" alt="Profile">
           </div>
           <input type="file" id="profileFileInput" accept="image/*" style="display:none;" onchange="handleSingleImagePick(event, 'profile')">
@@ -317,7 +316,7 @@
       </div>
     </div>
 
-    <!-- แท็บ 2: ไฮไลท์ (อัปโหลดรูปจากเครื่องโดยตรง ไม่จำกัดจำนวน) -->
+    <!-- แท็บ 2: ไฮไลท์ -->
     <div class="tab-content" id="tab-highlights">
       <div class="card">
         <div class="title">เพิ่มหมวดหมู่ไฮไลท์ใหม่ ♡</div>
@@ -340,7 +339,7 @@
           <label class="field-label">เลือกรูปภาพด้านในไฮไลท์ (เลือกพร้อมกันหลายรูปได้ไม่จำกัด)</label>
           <div class="file-picker-box" onclick="document.getElementById('newHlImagesFile').click()">
             <div class="file-picker-title" id="newHlImagesLabel">กดเลือกรูปภาพจากอัลบั้ม (ใส่ได้ไม่จำกัดจำนวน) ♡</div>
-            <div class="file-picker-sub">ระบบใช้ไฟล์ต้นฉบับความคมชัด 100% ไม่ลดขนาดภาพเด็ดขาด</div>
+            <div class="file-picker-sub">บันทึกรูปแยกชิ้นอัตโนมัติ ไม่ติดลิมิตไฟล์ใหญ่</div>
           </div>
           <input type="file" id="newHlImagesFile" accept="image/*" multiple style="display:none;" onchange="handleNewHlMultiPick(event)">
         </div>
@@ -404,6 +403,9 @@
   const DB_REVIEWS = "gxgie_reviews";
   const DB_HIGHLIGHTS = "gxgie_highlights";
 
+  // จำกัดขนาดต่อ 1 ฟิลด์รูปภาพใน Firestore ให้ต่ำกว่า 1,048,487 bytes อย่างปลอดภัย
+  const MAX_SAFE_IMAGE_BYTES = 720000;
+
   const DEFAULT_BANNER_URL = "https://file.garden/asG8Gt-rqWIpi3II/IMG_7602.png";
   const DEFAULT_PROFILE_URL = "https://file.garden/asG8Gt-rqWIpi3II/%E0%B9%84%E0%B8%A1%E0%B9%88%E0%B8%A1%E0%B8%B5%E0%B8%8A%E0%B8%B7%E0%B9%88%E0%B8%AD%2055_20261119201642.jpeg";
 
@@ -415,13 +417,70 @@
   let pickedNewHlCoverDataUrl = "";
   let pickedNewHlFiles = [];
 
-  // ฟังก์ชันอ่านไฟล์ภาพต้นฉบับตรงๆ ไม่มีการลดขนาดหรือบีบอัดคุณภาพ 100%
-  function readFileOriginal(file) {
+  function readFileAsDataUrl(file) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = () => resolve(reader.result);
       reader.onerror = () => reject(new Error("ไม่สามารถอ่านไฟล์รูปภาพได้"));
       reader.readAsDataURL(file);
+    });
+  }
+
+  function encodeCanvas(img, maxSide, quality, mimeType) {
+    const origW = img.naturalWidth || img.width || 600;
+    const origH = img.naturalHeight || img.height || 600;
+    let targetW = origW;
+    let targetH = origH;
+
+    if (Math.max(origW, origH) > maxSide) {
+      if (origW >= origH) {
+        targetW = maxSide;
+        targetH = Math.max(1, Math.round((origH * maxSide) / origW));
+      } else {
+        targetH = maxSide;
+        targetW = Math.max(1, Math.round((origW * maxSide) / origH));
+      }
+    }
+
+    const canvas = document.createElement("canvas");
+    canvas.width = targetW;
+    canvas.height = targetH;
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(img, 0, 0, targetW, targetH);
+    return canvas.toDataURL(mimeType || "image/jpeg", quality);
+  }
+
+  // ใช้ไฟล์ต้นฉบับเมื่อขนาดเล็กกว่าลิมิต และบีบอัดไล่สเต็ปอัตโนมัติเมื่อไฟล์ใหญ่เกินลิมิต Firestore
+  async function prepareImageForFirestore(file, preferredMaxSide) {
+    const rawDataUrl = await readFileAsDataUrl(file);
+    if (new Blob([rawDataUrl]).size <= MAX_SAFE_IMAGE_BYTES) {
+      return rawDataUrl;
+    }
+
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => {
+        const tiers = [
+          { side: preferredMaxSide || 1280, q: 0.85 },
+          { side: 1024, q: 0.78 },
+          { side: 800, q: 0.72 },
+          { side: 640, q: 0.65 },
+          { side: 480, q: 0.58 }
+        ];
+
+        let best = rawDataUrl;
+        for (let i = 0; i < tiers.length; i++) {
+          const candidate = encodeCanvas(img, tiers[i].side, tiers[i].q, "image/jpeg");
+          best = candidate;
+          if (new Blob([candidate]).size <= MAX_SAFE_IMAGE_BYTES) {
+            resolve(candidate);
+            return;
+          }
+        }
+        resolve(best);
+      };
+      img.onerror = () => reject(new Error("ไม่สามารถประมวลผลรูปภาพได้"));
+      img.src = rawDataUrl;
     });
   }
 
@@ -453,21 +512,27 @@
     document.getElementById(`tab-${tabName}`).classList.add('active');
   }
 
-  function initAdminDashboard() {
-    db.collection(DB_SITE).doc("config").get().then(doc => {
-      const d = doc.exists ? doc.data() : {};
-      document.getElementById('cfgShopName').value = d.shopName || "Gxgie";
-      document.getElementById('cfgShopBio').value = d.shopBio || "Credit, plus one here \nthanks for your support \nline : @632wdjwj";
-      document.getElementById('cfgMusic').value = d.musicUrl || "https://file.garden/asG8Gt-rqWIpi3II/Cocktail%20%E0%B8%87%E0%B8%B2%E0%B8%99%E0%B9%80%E0%B8%95%E0%B9%89%E0%B8%99%E0%B8%A3%E0%B8%B3%E0%B9%83%E0%B8%99%E0%B8%84%E0%B8%B7%E0%B8%99%E0%B8%9E%E0%B8%A3%E0%B8%B0%E0%B8%88%E0%B8%B1%E0%B8%99%E0%B8%97%E0%B8%A3%E0%B9%8C%E0%B9%80%E0%B8%95%E0%B9%87%E0%B8%A1%E0%B8%94%E0%B8%A7%E0%B8%87.mp3";
+  async function initAdminDashboard() {
+    const [cfgDoc, mediaDoc] = await Promise.all([
+      db.collection(DB_SITE).doc("config").get(),
+      db.collection(DB_SITE).doc("media").get()
+    ]);
 
-      const curBanner = d.bannerImg || DEFAULT_BANNER_URL;
-      const curProfile = (d.profileImg && d.profileImg !== DEFAULT_BANNER_URL) ? d.profileImg : DEFAULT_PROFILE_URL;
+    const d = cfgDoc.exists ? cfgDoc.data() : {};
+    const m = mediaDoc.exists ? mediaDoc.data() : {};
 
-      pickedBannerDataUrl = curBanner;
-      pickedProfileDataUrl = curProfile;
-      document.getElementById('previewBanner').src = curBanner;
-      document.getElementById('previewProfile').src = curProfile;
-    });
+    document.getElementById('cfgShopName').value = d.shopName || "Gxgie";
+    document.getElementById('cfgShopBio').value = d.shopBio || "Credit, plus one here \nthanks for your support \nline : @632wdjwj";
+    document.getElementById('cfgMusic').value = d.musicUrl || "https://file.garden/asG8Gt-rqWIpi3II/Cocktail%20%E0%B8%87%E0%B8%B2%E0%B8%99%E0%B9%80%E0%B8%95%E0%B9%89%E0%B8%99%E0%B8%A3%E0%B8%B3%E0%B9%83%E0%B8%99%E0%B8%84%E0%B8%B7%E0%B8%99%E0%B8%9E%E0%B8%A3%E0%B8%B0%E0%B8%88%E0%B8%B1%E0%B8%99%E0%B8%97%E0%B8%A3%E0%B9%8C%E0%B9%80%E0%B8%95%E0%B9%87%E0%B8%A1%E0%B8%94%E0%B8%A7%E0%B8%87.mp3";
+
+    const curBanner = m.bannerImg || d.bannerImg || DEFAULT_BANNER_URL;
+    const rawProfile = m.profileImg || d.profileImg;
+    const curProfile = (rawProfile && rawProfile !== DEFAULT_BANNER_URL) ? rawProfile : DEFAULT_PROFILE_URL;
+
+    pickedBannerDataUrl = curBanner;
+    pickedProfileDataUrl = curProfile;
+    document.getElementById('previewBanner').src = curBanner;
+    document.getElementById('previewProfile').src = curProfile;
 
     document.getElementById('editAdminEmail').value = currentAdminEmail;
 
@@ -478,13 +543,19 @@
   async function handleSingleImagePick(event, target) {
     const file = event.target.files[0];
     if (!file) return;
-    const dataUrl = await readFileOriginal(file);
-    if (target === 'banner') {
-      pickedBannerDataUrl = dataUrl;
-      document.getElementById('previewBanner').src = dataUrl;
-    } else if (target === 'profile') {
-      pickedProfileDataUrl = dataUrl;
-      document.getElementById('previewProfile').src = dataUrl;
+    try {
+      const prepared = await prepareImageForFirestore(file, target === 'profile' ? 900 : 1280);
+      if (target === 'banner') {
+        pickedBannerDataUrl = prepared;
+        document.getElementById('previewBanner').src = prepared;
+      } else if (target === 'profile') {
+        pickedProfileDataUrl = prepared;
+        document.getElementById('previewProfile').src = prepared;
+      }
+    } catch (err) {
+      alert('เลือกรูปภาพไม่สำเร็จ: ' + err.message);
+    } finally {
+      event.target.value = '';
     }
   }
 
@@ -493,17 +564,32 @@
     btn.disabled = true;
     btn.textContent = 'กำลังบันทึกข้อมูล ♡';
 
+    const bannerFinal = pickedBannerDataUrl || DEFAULT_BANNER_URL;
+    const profileFinal = pickedProfileDataUrl || DEFAULT_PROFILE_URL;
+
     try {
-      const payload = {
+      await db.collection(DB_SITE).doc("media").set({
+        bannerImg: bannerFinal,
+        profileImg: profileFinal,
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      }, { merge: true });
+
+      const configPayload = {
         shopName: document.getElementById('cfgShopName').value.trim(),
         shopBio: document.getElementById('cfgShopBio').value.trim(),
-        bannerImg: pickedBannerDataUrl || DEFAULT_BANNER_URL,
-        profileImg: pickedProfileDataUrl || DEFAULT_PROFILE_URL,
         musicUrl: document.getElementById('cfgMusic').value.trim(),
         updatedAt: firebase.firestore.FieldValue.serverTimestamp()
       };
 
-      await db.collection(DB_SITE).doc("config").set(payload, { merge: true });
+      // เก็บลง config ด้วยเฉพาะเมื่อขนาดไม่เกินลิมิต เพื่อไม่ให้เอกสารหลักเต็ม
+      if (new Blob([bannerFinal]).size <= MAX_SAFE_IMAGE_BYTES) {
+        configPayload.bannerImg = bannerFinal;
+      }
+      if (new Blob([profileFinal]).size <= MAX_SAFE_IMAGE_BYTES) {
+        configPayload.profileImg = profileFinal;
+      }
+
+      await db.collection(DB_SITE).doc("config").set(configPayload, { merge: true });
       alert('บันทึกข้อมูลโปรไฟล์ร้านค้าเรียบร้อยแล้วค่ะ ♡');
     } catch (err) {
       alert('เกิดข้อผิดพลาด: ' + err.message);
@@ -516,18 +602,24 @@
   async function handleNewHlCoverPick(event) {
     const file = event.target.files[0];
     if (!file) return;
-    pickedNewHlCoverDataUrl = await readFileOriginal(file);
-    const imgEl = document.getElementById('previewNewHlCover');
-    imgEl.src = pickedNewHlCoverDataUrl;
-    imgEl.classList.remove('hidden');
-    document.getElementById('newHlCoverLabel').textContent = `เลือกปกเรียบร้อยแล้ว (${file.name}) ♡`;
+    try {
+      pickedNewHlCoverDataUrl = await prepareImageForFirestore(file, 900);
+      const imgEl = document.getElementById('previewNewHlCover');
+      imgEl.src = pickedNewHlCoverDataUrl;
+      imgEl.classList.remove('hidden');
+      document.getElementById('newHlCoverLabel').textContent = `เลือกปกเรียบร้อยแล้ว (${file.name}) ♡`;
+    } catch (err) {
+      alert('เลือกรูปปกไม่สำเร็จ: ' + err.message);
+    } finally {
+      event.target.value = '';
+    }
   }
 
   function handleNewHlMultiPick(event) {
     const files = Array.from(event.target.files || []);
     if (files.length === 0) return;
     pickedNewHlFiles = files;
-    document.getElementById('newHlImagesLabel').textContent = `เลือกไว้แล้วทั้งหมด ${files.length} รูป (พร้อมอัปโหลดความชัด 100%) ♡`;
+    document.getElementById('newHlImagesLabel').textContent = `เลือกไว้แล้วทั้งหมด ${files.length} รูป (พร้อมอัปโหลดไม่จำกัด) ♡`;
   }
 
   async function createNewHighlight() {
@@ -543,7 +635,7 @@
     try {
       let coverToSave = pickedNewHlCoverDataUrl;
       if (!coverToSave && pickedNewHlFiles.length > 0) {
-        coverToSave = await readFileOriginal(pickedNewHlFiles[0]);
+        coverToSave = await prepareImageForFirestore(pickedNewHlFiles[0], 900);
       }
 
       const hlRef = await db.collection(DB_HIGHLIGHTS).add({
@@ -553,17 +645,15 @@
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
       });
 
-      // อัปโหลดไฟล์รูปภาพต้นฉบับทีละรูปแยกเอกสารใน subcollection 'images' (ใส่ได้ไม่จำกัด ไม่ติดลิมิต 1MB)
       for (let i = 0; i < pickedNewHlFiles.length; i++) {
         btn.textContent = `กำลังบันทึกรูปที่ ${i + 1} / ${pickedNewHlFiles.length} ♡`;
-        const originalDataUrl = await readFileOriginal(pickedNewHlFiles[i]);
+        const imgDataUrl = await prepareImageForFirestore(pickedNewHlFiles[i], 1280);
         await hlRef.collection("images").add({
-          dataUrl: originalDataUrl,
+          dataUrl: imgDataUrl,
           createdAt: Date.now() + i
         });
       }
 
-      // รีเซ็ตฟอร์ม
       document.getElementById('newHlTitle').value = '';
       document.getElementById('newHlCoverFile').value = '';
       document.getElementById('newHlImagesFile').value = '';
@@ -654,9 +744,9 @@
     try {
       for (let i = 0; i < files.length; i++) {
         if (btn) btn.textContent = `กำลังเพิ่มรูปที่ ${i + 1} / ${files.length} ♡`;
-        const originalDataUrl = await readFileOriginal(files[i]);
+        const imgDataUrl = await prepareImageForFirestore(files[i], 1280);
         await db.collection(DB_HIGHLIGHTS).doc(hlId).collection("images").add({
-          dataUrl: originalDataUrl,
+          dataUrl: imgDataUrl,
           createdAt: Date.now() + i
         });
       }
@@ -666,6 +756,7 @@
     } catch (err) {
       alert('เกิดข้อผิดพลาด: ' + err.message);
     } finally {
+      event.target.value = '';
       if (btn) {
         btn.disabled = false;
         btn.textContent = '+ เลือกรูปภาพจากเครื่องเพิ่มเข้าไฮไลท์นี้ ♡';
