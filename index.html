@@ -62,7 +62,6 @@
       margin-bottom: 12px;
     }
 
-    /* ส่วนโปรไฟล์ร้าน: แบนเนอร์และโปรไฟล์ซ้อนติดกัน */
     .banner-wrap {
       width: 100%;
       height: 145px;
@@ -114,7 +113,6 @@
       text-align: center;
     }
 
-    /* ส่วน Highlights */
     .highlights-section {
       margin-top: 14px;
       padding-top: 4px;
@@ -173,7 +171,6 @@
       font-weight: 600;
     }
 
-    /* กล่องสถิติ Total Reviews & Rating */
     .stats-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -200,7 +197,6 @@
       font-weight: 600;
     }
 
-    /* ฟอร์มเขียนรีวิว */
     .review-form-title {
       font-size: 15.5px;
       font-weight: 700;
@@ -229,7 +225,6 @@
       resize: vertical;
     }
 
-    /* ดาวให้คะแนนโทนสีฟ้า */
     .star-selector {
       display: flex;
       justify-content: center;
@@ -265,7 +260,6 @@
     .btn-submit-review:active { transform: scale(0.98); }
     .btn-submit-review:disabled { opacity: 0.65; cursor: not-allowed; }
 
-    /* รายการรีวิวทั้งหมด */
     .reviews-header {
       font-size: 14px;
       font-weight: 700;
@@ -319,7 +313,6 @@
       word-break: break-word;
     }
 
-    /* Story / Highlight Viewer Modal */
     .story-modal {
       position: fixed;
       inset: 0;
@@ -425,12 +418,10 @@
 </head>
 <body>
 
-  <!-- เพลงพื้นหลัง -->
   <audio id="bgMusic" loop preload="auto" src="https://file.garden/asG8Gt-rqWIpi3II/Cocktail%20%E0%B8%87%E0%B8%B2%E0%B8%99%E0%B9%80%E0%B8%95%E0%B9%89%E0%B8%99%E0%B8%A3%E0%B8%B3%E0%B9%83%E0%B8%99%E0%B8%84%E0%B8%B7%E0%B8%99%E0%B8%9E%E0%B8%A3%E0%B8%B0%E0%B8%88%E0%B8%B1%E0%B8%99%E0%B8%97%E0%B8%A3%E0%B9%8C%E0%B9%80%E0%B8%95%E0%B9%87%E0%B8%A1%E0%B8%94%E0%B8%A7%E0%B8%87.mp3"></audio>
 
   <div class="container">
 
-    <!-- 1. การ์ดโปรไฟล์ + ไฮไลท์ -->
     <div class="glass-card">
       <div class="banner-wrap">
         <img id="bannerImg" src="https://file.garden/asG8Gt-rqWIpi3II/IMG_7602.png" alt="Banner">
@@ -443,7 +434,6 @@
 thanks for your support 
 line : @632wdjwj</div>
 
-      <!-- แถบ Highlights -->
       <div class="highlights-section" id="highlightsWrapper">
         <div class="highlights-label">Highlights</div>
         <div class="highlights-scroll" id="highlightsContainer">
@@ -452,7 +442,6 @@ line : @632wdjwj</div>
       </div>
     </div>
 
-    <!-- 2. การ์ดสรุปจำนวนรีวิว & คะแนนเฉลี่ย -->
     <div class="stats-grid">
       <div class="stat-card">
         <div class="stat-number" id="totalReviewsCount">0</div>
@@ -464,7 +453,6 @@ line : @632wdjwj</div>
       </div>
     </div>
 
-    <!-- 3. กล่องส่งรีวิว -->
     <div class="glass-card">
       <div class="review-form-title" id="reviewFormTitle">review Gxgie ♡</div>
       <input type="text" id="revNameInput" class="input-field" placeholder="ชื่อของคุณ ♡" maxlength="40">
@@ -481,7 +469,6 @@ line : @632wdjwj</div>
       <button type="button" class="btn-submit-review" id="btnSubmitReview" onclick="submitReview()">sent review ♡</button>
     </div>
 
-    <!-- 4. กล่องแสดงรีวิวทั้งหมด -->
     <div class="glass-card">
       <div class="reviews-header">รีวิวทั้งหมด ♡</div>
       <div id="reviewsListContainer">
@@ -491,7 +478,6 @@ line : @632wdjwj</div>
 
   </div>
 
-  <!-- Story Viewer Modal สำหรับเปิดดูรูปไฮไลท์ชัดเต็ม 100% -->
   <div class="story-modal" id="storyModal">
     <div>
       <div class="story-progress-bar" id="storyProgressBar"></div>
@@ -539,6 +525,9 @@ line : @632wdjwj</div>
     let activeStoryId = null;
     let activeStoryIndex = 0;
 
+    let latestConfigData = {};
+    let latestMediaData = {};
+
     const music = document.getElementById('bgMusic');
 
     ['touchstart', 'click'].forEach(evt => {
@@ -549,23 +538,42 @@ line : @632wdjwj</div>
       }, { once: true });
     });
 
+    function renderShopConfigAndMedia() {
+      const d = latestConfigData || {};
+      const m = latestMediaData || {};
+
+      if (d.shopName) {
+        document.getElementById('shopNameText').textContent = d.shopName.includes('♡') ? d.shopName : d.shopName + ' ♡';
+        document.getElementById('pageTitle').textContent = d.shopName + " ♡";
+        const cleanName = d.shopName.replace(/♡/g, '').trim();
+        document.getElementById('reviewFormTitle').textContent = `review ${cleanName} ♡`;
+      }
+      if (d.shopBio !== undefined) document.getElementById('shopBioText').textContent = d.shopBio;
+
+      const bannerSrc = m.bannerImg || d.bannerImg;
+      if (bannerSrc) document.getElementById('bannerImg').src = bannerSrc;
+
+      const profileSrc = m.profileImg || d.profileImg;
+      if (profileSrc && profileSrc !== OLD_PROFILE_URL) {
+        document.getElementById('profileImg').src = profileSrc;
+      } else {
+        document.getElementById('profileImg').src = DEFAULT_PROFILE_URL;
+      }
+
+      if (d.musicUrl && music.src !== d.musicUrl) music.src = d.musicUrl;
+    }
+
     db.collection(DB_SITE).doc("config").onSnapshot(doc => {
       if (doc.exists) {
-        const d = doc.data();
-        if (d.shopName) {
-          document.getElementById('shopNameText').textContent = d.shopName.includes('♡') ? d.shopName : d.shopName + ' ♡';
-          document.getElementById('pageTitle').textContent = d.shopName + " ♡";
-          const cleanName = d.shopName.replace(/♡/g, '').trim();
-          document.getElementById('reviewFormTitle').textContent = `review ${cleanName} ♡`;
-        }
-        if (d.shopBio !== undefined) document.getElementById('shopBioText').textContent = d.shopBio;
-        if (d.bannerImg) document.getElementById('bannerImg').src = d.bannerImg;
-        if (d.profileImg && d.profileImg !== OLD_PROFILE_URL) {
-          document.getElementById('profileImg').src = d.profileImg;
-        } else {
-          document.getElementById('profileImg').src = DEFAULT_PROFILE_URL;
-        }
-        if (d.musicUrl && music.src !== d.musicUrl) music.src = d.musicUrl;
+        latestConfigData = doc.data() || {};
+        renderShopConfigAndMedia();
+      }
+    });
+
+    db.collection(DB_SITE).doc("media").onSnapshot(doc => {
+      if (doc.exists) {
+        latestMediaData = doc.data() || {};
+        renderShopConfigAndMedia();
       }
     });
 
